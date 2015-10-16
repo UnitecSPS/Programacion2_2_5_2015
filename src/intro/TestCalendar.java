@@ -43,7 +43,7 @@ public class TestCalendar {
         System.out.println("Año: "+ old.get(Calendar.YEAR));
         System.out.println("Semana: "+old.get(Calendar.WEEK_OF_YEAR));
         System.out.println("Dia en el año: "+old.get(Calendar.DAY_OF_YEAR));
-        System.out.println("Mes: "+old.get(Calendar.MONTH));
+        System.out.println("Mes : "+old.get(Calendar.MONTH));
         
         //adicionar o restar valores
         old.add(Calendar.YEAR, 10);
@@ -60,7 +60,7 @@ public class TestCalendar {
         
         //nombres
         String mes = old.getDisplayName(Calendar.MONTH, Calendar.LONG, 
-                Locale.FRENCH);
+                Locale.forLanguageTag("es"));
         String dia = old.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, 
                 Locale.forLanguageTag("es"));
         System.out.println(mes+" "+dia);
