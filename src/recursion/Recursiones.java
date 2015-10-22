@@ -41,4 +41,43 @@ public class Recursiones {
             return sumaUp(n-1) + n;
         return 1;
     }
+    
+    public int sumaDown(int n){
+        return sumaDown(n,0);
+    }
+    
+    private int sumaDown(int n, int suma){
+        if(n >= 1)
+            return sumaDown(n-1, suma+n);
+        return suma;
+    }
+    
+    public int potUp(int b, int e){
+        if(e>=1)
+            return potUp(b,e-1)*b;
+        return   1;        
+    }
+    
+    public int PotDown(int b, int e){
+        return PotDown(b, e, 1 );
+    }
+
+    private int PotDown(int b, int e,int pot) {
+        if(e>=1)
+            return PotDown(b,e-1,pot*b);
+        return pot;
+    }
+    
+    public int mcd(int n1,int n2){
+        return mcd(n1,n2,2);
+    }
+    
+    private int mcd(int n1, int n2, int d){
+        if(n1 >= d && n2 >= d){
+            if(n1 % d == 0 && n2 % d == 0)
+                return mcd(n1/d, n2/d, d) * d;
+            return mcd(n1, n2, d+1);
+        }
+        return 1;
+    }
 }
