@@ -12,9 +12,9 @@ package recursion.tg1;
 public class Test {
     public static void main(String[] args) {
         ArrayRecs ar = new ArrayRecs(5);
-        ar.llenar(0);
-        System.out.println("Suma: " + ar.suma(0));
-        System.out.println("Esta el 3: "+ar.buscar(3, 0));
+        ar.llenar();
+        System.out.println("Suma: " + ar.suma());
+        System.out.println("Esta el 3: "+ar.buscar());
         System.out.println("Mayor: "+ ar.maximo());
         System.out.println("Factorial: "+ ar.factorial(0));
     }
