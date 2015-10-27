@@ -41,8 +41,8 @@ public class ArrayRecs {
     }
     
     //Funcion Auxiliar.
-    public boolean buscar(){
-        return buscar(lea.nextInt(),0);
+    public boolean buscar(int n){
+        return buscar(n,0);
     }
     private boolean buscar(int n, int pos){
         if(pos < array.length){
@@ -93,8 +93,8 @@ public class ArrayRecs {
     }
     
     //Mi parte comienza aqui. -RobertoMelara
-    public int divisible(){
-        return divisible(lea.nextInt(),0,0);
+    public int divisible(int n){
+        return divisible(n,0,0);
     }
     private int divisible(int n, int acum, int pos){
         if(pos<array.length){
@@ -121,8 +121,8 @@ public class ArrayRecs {
         return true;
     }
     
-    public void remplazar(){
-        remplazar(lea.nextInt(),lea.nextInt(), 0);
+    public void remplazar(int n, int m){
+        remplazar(n, m, 0);
     }
     private void remplazar(int n, int m, int pos){
         if(pos < array.length){
