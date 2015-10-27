@@ -40,7 +40,7 @@ public class ArrayRecs_Menu {
                     }
                 case 3:
                     if(lleno == true){
-                        System.out.println(arr.buscar());
+                        System.out.println(arr.buscar(lea.nextInt());
                         break;
                     }else{
                         System.out.println("Arreglo vacio!");
@@ -72,7 +72,7 @@ public class ArrayRecs_Menu {
                     }
                 case 7:
                     if(lleno == true){
-                        System.out.println(arr.divisible());
+                        System.out.println(arr.divisible(lea.nextIn());
                         break;
                     }else{
                         System.out.println("Arreglo vacio!");
@@ -88,7 +88,7 @@ public class ArrayRecs_Menu {
                     }
                 case 9:
                     if(lleno == true){
-                        arr.remplazar();
+                        arr.remplazar(lea.nextInt(),lea.nextInt());
                         break;
                     }else{
                         System.out.println("Arreglo vacio!");
