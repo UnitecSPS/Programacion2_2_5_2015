@@ -12,10 +12,11 @@ package herencia;
 public class Ficha {
     protected int vida, fuerza, escudo;
 
-    public Ficha() {
-        this.vida = 0;
-        this.fuerza = 0;
-        this.escudo = 0;
+    public Ficha(int v, int f, int e) {
+        System.out.println("LLamando a Papa");
+        vida = v;
+        fuerza = f;
+        escudo = e;
     }
 
     public int getVida() {
@@ -30,11 +31,13 @@ public class Ficha {
         return escudo;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Ficha{" + "vida=" + vida + ", fuerza=" + fuerza + ", escudo=" + escudo + '}';
-//    }
+    @Override
+    public String toString() {
+        return "{" + "vida=" + vida + ", fuerza=" + fuerza + ", escudo=" + escudo + '}';
+    }
     
-    
+    public void quienSoy(){
+        System.out.println("Soy una Ficha");
+    }
     
 }

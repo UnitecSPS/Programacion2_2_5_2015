@@ -13,7 +13,7 @@ import herencia.HombreLobo;
  */
 public class TestDeProtected {
     public static void main(String[] args) {
-        HombreLobo hl = new HombreLobo();
+        HombreLobo hl = new HombreLobo(5);
        // hl.escudo = 1;
     }
 }
