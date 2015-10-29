@@ -14,7 +14,7 @@ public class Test {
         ArrayRecs ar = new ArrayRecs(5);
         ar.llenar();
         System.out.println("Suma: " + ar.suma());
-        System.out.println("Esta el 3: "+ar.buscar());
+        System.out.println("Esta el 3: "+ar.buscar(3));
         System.out.println("Mayor: "+ ar.maximo());
         System.out.println("Factorial: "+ ar.factorial(0));
     }
