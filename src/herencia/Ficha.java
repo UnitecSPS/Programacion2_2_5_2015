@@ -11,6 +11,7 @@ package herencia;
  */
 public class Ficha {
     protected int vida, fuerza, escudo;
+    public static final int version = 123;
 
     public Ficha(int v, int f, int e) {
         System.out.println("LLamando a Papa");
@@ -37,6 +38,7 @@ public class Ficha {
     }
     
     public void quienSoy(){
+        version++;
         System.out.println("Soy una Ficha");
     }
     
