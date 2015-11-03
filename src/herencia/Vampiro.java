@@ -9,10 +9,11 @@ package herencia;
  *
  * @author Aula
  */
-public class Vampiro extends Ficha {
-
+public final class Vampiro extends Ficha {
+    public static final int FUERZA = 5;
+    
     public Vampiro() {
-        super(4,5,4);
+        super(4,FUERZA,4);
     }
     
     @Override

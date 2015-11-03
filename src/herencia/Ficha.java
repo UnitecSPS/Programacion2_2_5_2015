@@ -11,6 +11,7 @@ package herencia;
  */
 public class Ficha {
     protected int vida, fuerza, escudo;
+    public static final int version = 123;
 
     public Ficha(int v, int f, int e) {
         System.out.println("LLamando a Papa");
@@ -19,15 +20,15 @@ public class Ficha {
         escudo = e;
     }
 
-    public int getVida() {
+    public final int getVida() {
         return vida;
     }
 
-    public int getFuerza() {
+    public final int getFuerza() {
         return fuerza;
     }
 
-    public int getEscudo() {
+    public final int getEscudo() {
         return escudo;
     }
 
@@ -37,7 +38,18 @@ public class Ficha {
     }
     
     public void quienSoy(){
+        //version++;
+        final int x=5;
         System.out.println("Soy una Ficha");
+    }
+    
+    public void damage(Ficha atacante){
+        if(escudo > 0)
+            escudo -= atacante.fuerza;
+        if(escudo < 0){
+            vida += escudo;
+            escudo = 0;
+        }
     }
     
 }
