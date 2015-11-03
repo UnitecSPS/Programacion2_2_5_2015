@@ -21,7 +21,7 @@ public abstract class Shape {
         graphWidth = gw;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 

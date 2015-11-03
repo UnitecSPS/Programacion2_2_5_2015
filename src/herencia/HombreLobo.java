@@ -9,16 +9,17 @@ package herencia;
  *
  * @author Aula
  */
-public class HombreLobo extends Ficha {
+public final class HombreLobo extends Ficha {
     
     private boolean soportaElDia;
+    public static final int FUERZA = 4;
     
     public HombreLobo(int v){
-        super(v,4,3);
+        super(v,FUERZA,3);
         System.out.println("Llamando a la Luna");
     }
 
-    public boolean isSoportaElDia() {
+    public final boolean isSoportaElDia() {
         return soportaElDia;
     }
     

@@ -37,6 +37,6 @@ public class Batalla {
         System.out.println(hl);
         //b- directo
         System.out.println("Soporta? "+((HombreLobo)hl).isSoportaElDia());
-        
+          
     }
 }
