@@ -5,11 +5,17 @@
  */
 package interfaces;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Aula
  */
 public interface Commentable {
+    //por default: public static final
+    double VERSION=1.2;
+    ArrayList<String> arreys = new ArrayList<>();
+    //por default: public abstract
     void addComment(int id, String comment);
     void printCommentsFromAPost(int id);
 }

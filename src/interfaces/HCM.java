@@ -45,5 +45,17 @@ public class HCM {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
+  
+        System.out.println("ver = " + Commentable.VERSION);
+        System.out.println("ver = " + Facebook.VERSION);
+        System.out.println("ver = " + Chisme.VERSION);
+        Facebook.arreys.add("Patito");
+        Commentable.arreys.add("Gallito");
+        for(String s : Chisme.arreys )
+            System.out.println("-"+s);
+        
+        Commentable chi = new ChismeLikeABoss();
+        if(chi instanceof Chismeable)
+            System.out.println(((Chismeable)chi).chismeDelDia());
     }
 }
