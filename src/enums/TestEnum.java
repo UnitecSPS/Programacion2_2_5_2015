@@ -13,6 +13,7 @@ import java.util.Scanner;
  */
 public class TestEnum {
     public static void main(String[] args) {
+        
         for(Ejes ej : Ejes.values())
             System.out.println("-"+ej.name());
         
