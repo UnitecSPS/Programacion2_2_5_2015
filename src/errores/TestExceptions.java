@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class TestExceptions {
     public static void main(String[] args) {
         System.out.println("Empezando Main");
+      
         try{
             System.out.println("Comenzando el Try");
             A();
@@ -22,6 +23,7 @@ public class TestExceptions {
         }
         catch(InputMismatchException e){
             System.out.println("Ingrese un entero.");
+           //int x = 7/0;
         }
         catch(IndexOutOfBoundsException e){
             System.out.println("Ingrese una posicion correcta");
@@ -33,6 +35,9 @@ public class TestExceptions {
             System.out.println(ele.getMethodName()+"-"+
                     ele.getLineNumber()+"-"+
                     ele.getFileName());
+        }
+        finally{
+            System.out.println("Garantizado que corre");
         }
         
         System.out.println("Terminando Main");

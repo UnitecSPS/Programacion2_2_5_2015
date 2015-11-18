@@ -5,6 +5,7 @@
  */
 package errores;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -14,6 +15,17 @@ import java.util.Scanner;
 public class ValidarInputs {
     public static void main(String[] args) {
         Scanner lea = new Scanner(System.in);
-        int x = lea.nextInt();
+        do{
+            try{
+                int x = lea.nextInt();
+                break;
+            }
+            catch(InputMismatchException e){
+                lea.next();
+                System.out.println("Ingrese un entero");
+            }
+        }while(true);
+        
+        
     }
 }
