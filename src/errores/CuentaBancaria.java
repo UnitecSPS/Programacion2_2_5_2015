@@ -5,6 +5,8 @@
  */
 package errores;
 
+import java.io.IOException;
+
 /**
  *
  * @author Aula
@@ -12,7 +14,7 @@ package errores;
 public class CuentaBancaria {
     public double saldo=500;
     
-    public void deposito(double m){
+    public void deposito(double m)throws TransactionException,IOException{
         if(m < 0)
             throw new TransactionException("Monto a depositar negativo");
         saldo+=m;
