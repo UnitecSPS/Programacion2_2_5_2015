@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package errores;
+package errores.prueba3;
 
 /**
  *
  * @author Aula
  */
-public class TransactionException extends Exception {
-    public TransactionException(String m){
-        super(m);
+public class InvalidValueException extends RuntimeException {
+    public InvalidValueException(int v){
+        super("Numero "+v+" no es permitido.");
     }
-    
-    
 }

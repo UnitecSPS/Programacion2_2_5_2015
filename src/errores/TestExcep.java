@@ -5,6 +5,7 @@
  */
 package errores;
 
+import javax.activity.InvalidActivityException;
 import javax.swing.JOptionPane;
 
 /**
@@ -109,6 +110,11 @@ public class TestExcep extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        try{
+            cb.deposito(-100);
+        }catch(Exception e){
+            
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
