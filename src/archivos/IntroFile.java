@@ -50,6 +50,8 @@ public class IntroFile {
                     f.getAbsolutePath());
             System.out.println("Bytes: "+
                     f.length());
+            System.out.println("Parent: "+
+                    f.getAbsoluteFile().getParent());
             Date d = new Date(f.lastModified());
             //Calendar c = Calendar.getInstance();
             //c.setTimeInMillis(f.lastModified());
