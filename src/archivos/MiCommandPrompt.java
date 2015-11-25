@@ -46,6 +46,7 @@ public class MiCommandPrompt {
                     case "INFO":
                         //TODO: Desplegar la info del
                             //file seleccionado
+                        info(lea.next());
                         break;
                     case "DELETE":
                         /*TODO Intentar borrar un 
@@ -157,5 +158,10 @@ public class MiCommandPrompt {
                     System.out.println("No Existe la ruta especificada.");
         }
         
+    }
+
+    private static void info(String name) {
+        File f = new File(ROOT+"/"+name);
+        System.out.println("Bytes: "+f.length());
     }
 }
