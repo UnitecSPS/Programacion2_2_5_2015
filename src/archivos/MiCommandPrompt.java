@@ -162,6 +162,26 @@ public class MiCommandPrompt {
 
     private static void info(String name) {
         File f = new File(ROOT+"/"+name);
-        System.out.println("Bytes: "+f.length());
+        System.out.println("Bytes: "+length(f));
+    }
+
+    /*
+    PRUEBA 4:
+    Crear una funcion que retorne el tamaño en bytes
+    de un File f si es archivo y si es directorio
+    recursivamente se suma los tamaños de sus
+    archivos que contiene.
+    */
+    private static long length(File f) {
+        long length = 0;
+        
+        if(f.isDirectory()){
+            for(File child : f.listFiles())
+                length += length(child);
+        }
+        else
+            length = f.length();
+        
+        return length;
     }
 }

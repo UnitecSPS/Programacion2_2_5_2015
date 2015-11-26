@@ -30,18 +30,17 @@ public class TestTextWriter {
         }
     }
     private static void escribirEn(String path, boolean app) throws IOException {
-        FileWriter fw = new FileWriter(path,app);
-        
-        do{
-            String data = lea.nextLine();
-            
-            if(!data.equals("$%&")){
-                fw.write(data+"\r\n");
-            }
-            else
-                break;
-        }while(true);
-        
-        fw.close();
+        try (FileWriter fw = new FileWriter(path,app)) {
+            do{
+                String data = lea.nextLine();
+                
+                if(!data.equals("$%&")){
+                    fw.write(data+"\r\n");
+                    fw.flush();
+                }
+                else
+                    break;
+            }while(true);
+        }
     }
 }
