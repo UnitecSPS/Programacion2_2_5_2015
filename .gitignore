@@ -71,7 +71,10 @@ College/*
  
 #java specific
 *.class
- 
+
+#specific for lourdes market
+*.sml
+
 #general swap/backup files
 *.so
 *.log
