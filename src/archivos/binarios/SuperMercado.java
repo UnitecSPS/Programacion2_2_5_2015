@@ -94,11 +94,95 @@ public class SuperMercado {
         return true;
     }
     
+    public String[] encabezados(){
+        String head[] = {"Codigo","Titulo","Tipo",
+            "Precio", "Existencia"};
+        return head;
+    }
+    
+    /*
+    retornar CUANTOS productos tiene el archivo
+    */
+    public int productCount()throws IOException{
+      rCods.seek(PRODUCTO_OFFSET);
+      int cod = rCods.readInt();
+      return cod-1;
+    }
+    
+    public Object[][] toTable()throws IOException{
+        Object table[][] = new Object[productCount()][5];
+        
+        return table;
+    }
+    
     /*
     Imprima todos los datos de todos los productos
     agregados
     */
-    public void list(){
+    public void list() throws IOException{
+        rProds.seek(0);
+        while(rProds.getFilePointer() < rProds.length()){
+            int c = rProds.readInt();
+            String title = rProds.readUTF();
+            String tipo = rProds.readUTF();
+            double p = rProds.readDouble();
+            int cant = rProds.readInt();
+            System.out.println(c+"-"+title+"-"+tipo+
+                    " Lps."+p+" - "+cant+" items.");
+        }
+    }
+    
+    /*
+    Busca un producto con codigo "codp" dentro
+    del archivo, si lo encuentra retorna true
+    pero deja el apuntador justo antes del nombre
+    de dicho producto. Retorna false si no esta
+    */
+    public boolean search(int codp)throws IOException{
+        rProds.seek(0);
+        while(rProds.getFilePointer() < rProds.length()){
+            if(codp == rProds.readInt())
+                return true;
+            rProds.readUTF();
+            rProds.readUTF();
+            rProds.skipBytes(12);
+        }
+        return false;
+    }
+    
+    /*
+    Busca un producto con ese codigo, si lo encuentra
+    le suma cant al monto que existencia que tenga
+    Retorna true si se pudo agregar o no
+    */
+    public boolean addItemToProduct(int codp, int cant) throws IOException{
+        boolean result = search(codp);
         
+        if(result){
+            rProds.readUTF();
+            rProds.readUTF();
+            rProds.readDouble();
+            int ex = rProds.readInt();
+            
+            rProds.seek(rProds.getFilePointer()-4);
+            rProds.writeInt(ex+cant);
+        }
+        
+        return result;
+    }
+    
+    /*
+    Busca un producto con ese codigo y actualiza
+    su precio si existe.
+    Retorna true si pudo hacer o no
+    */
+    public boolean setOfferToProduct(int codp, double newPrice) throws IOException{
+        boolean result = search(codp);
+        if(result){
+            rProds.readUTF();
+            rProds.readUTF();
+            rProds.writeDouble(newPrice);
+        }
+        return result;
     }
 }
