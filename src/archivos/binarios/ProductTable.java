@@ -5,6 +5,11 @@
  */
 package archivos.binarios;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Aula
@@ -16,6 +21,7 @@ public class ProductTable extends javax.swing.JPanel {
      */
     public ProductTable() {
         initComponents();
+        initTable();
     }
 
     /**
@@ -53,6 +59,11 @@ public class ProductTable extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTable1KeyPressed(evt);
+            }
+        });
         table.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -67,10 +78,24 @@ public class ProductTable extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
+        // TODO add your handling code here:
+        System.out.println(evt);
+    }//GEN-LAST:event_jTable1KeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTable jTable1;
     private javax.swing.JScrollPane table;
     // End of variables declaration//GEN-END:variables
+
+    private void initTable() {
+        try {
+            jTable1.setModel(new DefaultTableModel(Menu.market.toTable(),
+                    Menu.market.encabezados()));
+        } catch (IOException ex) {
+            Menu.exceptionOptionPane(ex);
+        }
+    }
 }

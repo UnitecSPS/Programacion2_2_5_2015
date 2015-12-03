@@ -6,6 +6,7 @@
 package archivos.binarios;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -34,13 +35,13 @@ public class SuperMercado {
         long fecha
         String cliente
         String forma de pago
-        double st
-        double inte
-        double desc
         int items
             int cod producto
             int cantidad del producto
             double precio unitario del prod en ese momento
+        double st
+        double inte
+        double desc
     */
     private RandomAccessFile rProds, rCods;
     public static final String ROOT_FOLDER = "market";
@@ -90,7 +91,7 @@ public class SuperMercado {
         //precio
         rProds.writeDouble(price);
         //existencia
-        rProds.writeInt(10);
+        rProds.writeInt(1);
         return true;
     }
     
@@ -110,7 +111,17 @@ public class SuperMercado {
     }
     
     public Object[][] toTable()throws IOException{
-        Object table[][] = new Object[productCount()][5];
+        int filas = productCount();
+        Object table[][] = new Object[filas][5];
+        
+        rProds.seek(0);
+        for(int f=0; f < filas; f++){
+            table[f][0] = rProds.readInt();
+            table[f][1] = rProds.readUTF();
+            table[f][2] = rProds.readUTF();
+            table[f][3] = rProds.readDouble();
+            table[f][4] = rProds.readInt();
+        }
         
         return table;
     }
@@ -184,5 +195,40 @@ public class SuperMercado {
             rProds.writeDouble(newPrice);
         }
         return result;
+    }
+
+    /*
+    Pauta Prueba 5, sin usar rProds
+    */
+    public boolean insuficienteReport() {
+        try{
+            RandomAccessFile r = new RandomAccessFile(ROOT_FOLDER+"/productos.sml",
+                "rw");
+            FileWriter fw = new FileWriter("Insuficiente.txt");
+            fw.write("LISTADO DE PRODUCTOS INSUFICIENTES");
+            fw.write("\r\n----------------------------------\r\n");
+            
+            while(r.getFilePointer() < r.length()){
+                int c = r.readInt();
+                String t = r.readUTF();
+                String ti = r.readUTF();
+                r.readDouble();
+                int cant = r.readInt();
+                
+                if(cant < 2)
+                    fw.write(c+"-"+t+"-"+ti+"-"+cant+
+                        " items disponibles\r\n");
+            }
+            
+            fw.close();
+            r.close();
+            return true;
+        }catch(IOException e){
+            return false;
+        }
+    }
+    
+    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
+        return false;
     }
 }

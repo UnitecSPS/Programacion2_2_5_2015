@@ -106,7 +106,12 @@ public class Menu extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem4);
 
-        jMenuItem5.setText("jMenuItem5");
+        jMenuItem5.setText("Insuficientes");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem5);
 
         jMenuBar1.add(jMenu3);
@@ -167,6 +172,7 @@ public class Menu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             market.list();
+            setMyPanel(new ProductTable());
         } catch (IOException ex) {
             exceptionOptionPane(ex);
         }
@@ -180,6 +186,14 @@ public class Menu extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         setMyPanel(new UpdatePrice());
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        if( market.insuficienteReport() )
+            JOptionPane.showMessageDialog(this, "Archivo de Insuficientes Actualizado");
+        else
+            JOptionPane.showMessageDialog(this, "Error en Archivo Insuficiente.");
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     public static void exceptionOptionPane(Exception e){
         JOptionPane.showMessageDialog(null,e.toString(), 

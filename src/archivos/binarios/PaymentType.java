@@ -5,18 +5,14 @@
  */
 package archivos.binarios;
 
-import java.util.Scanner;
-
 /**
  *
  * @author Aula
  */
-public class Lourdes {
-    static SuperMercado market = new SuperMercado();
-    static Scanner lea = new Scanner(System.in);
-    
-    public static void main(String[] args) {
-        int op;
-        
+public enum PaymentType {
+    TARJETA(0), CONTADO(0.02), TARJETA_LOURDES(0.1);
+    double discount;
+    private PaymentType(double d){
+        discount = d;
     }
 }
