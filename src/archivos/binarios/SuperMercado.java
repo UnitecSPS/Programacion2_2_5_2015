@@ -258,34 +258,35 @@ public class SuperMercado {
         si no. (20%)
     */
     public boolean printInvoice(int codf) throws IOException{
+        FileWriter fw = new FileWriter(ROOT_FOLDER+"factura_codigo_cliente.txt");
         rFac.seek(0);
         while(rFac.getFilePointer()<rFac.length()){
-//        int codfactura
-//        long fecha
-//        String cliente
-//        String forma de pago
-//        int items
-//            int cod producto
-//            int cantidad del producto
-//            double precio unitario del prod en ese momento
-//        double st
-//        double inte
-//        double desc
-          
           int codFac = rFac.readInt();
           if(codf==codFac){
+              fw.write(codFac+"\r\n");
               long fecha = rFac.readLong();
+              fw.write((int) fecha+"\r\n");
               String cliente = rFac.readUTF();
+              fw.write(cliente+"\r\n");
               String fpago = rFac.readUTF();
+              fw.write(fpago+"\r\n");
               int items = rFac.readInt();
+              fw.write(codf+"\r\n");
               for(int i=0;i<items;i++){
                   int item1 = rFac.readInt();
+                  fw.write(item1+"\r\n");
                   int item2 = rFac.readInt();
+                  fw.write(item2+"\r\n");
                   double item3 = rFac.readDouble();
+                  fw.write((int) item3+"\r\n");
               }
               double st = rFac.readDouble();
+              fw.write((int) st+"\r\n");
               double inte = rFac.readDouble();
+              fw.write((int) inte+"\r\n");
               double desc = rFac.readDouble();
+              fw.write((int) desc+"\r\n");
+              return true;
           }
             
         }
