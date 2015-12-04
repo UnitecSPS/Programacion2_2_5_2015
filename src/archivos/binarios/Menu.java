@@ -92,6 +92,11 @@ public class Menu extends javax.swing.JFrame {
         jMenu2.setText("Facturas");
 
         jMenuItem3.setText("Generar Venta");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem3);
 
         jMenuBar1.add(jMenu2);
@@ -135,7 +140,7 @@ public class Menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -194,6 +199,11 @@ public class Menu extends javax.swing.JFrame {
         else
             JOptionPane.showMessageDialog(this, "Error en Archivo Insuficiente.");
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        setMyPanel(new GenerateInvoice(panel));
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     public static void exceptionOptionPane(Exception e){
         JOptionPane.showMessageDialog(null,e.toString(), 

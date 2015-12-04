@@ -233,7 +233,14 @@ public class SuperMercado {
         producto que existe. Si no existe, regresa
         null (10%)
     */
-    public InvoiceItem getProduct(int cod){
+    public InvoiceItem getProduct(int cod) throws IOException{
+        if(search(cod)){
+            String n = rProds.readUTF();
+            rProds.readUTF();
+            double p = rProds.readDouble();
+            int e = rProds.readInt();
+            return new InvoiceItem(cod, e, p, n);
+        }
         return null;
     }
         
