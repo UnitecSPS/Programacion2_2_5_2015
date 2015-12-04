@@ -6,9 +6,11 @@
 package archivos.binarios;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Date;
 
 /**
  *
@@ -233,7 +235,28 @@ public class SuperMercado {
         producto que existe. Si no existe, regresa
         null (10%)
     */
-    public InvoiceItem getProduct(int cod){
+    public InvoiceItem getProduct(int cod)throws IOException{
+        int codigo=0;
+        int cant=0;
+        double p=0;
+        String t="";
+        
+        RandomAccessFile r = new RandomAccessFile(ROOT_FOLDER+"/producto.sml","rw");
+        InvoiceItem i = new InvoiceItem(codigo, cant,p, t);
+      
+        r.seek(0);
+        while(r.getFilePointer()<r.length()){
+             codigo = r.readInt();
+             t = r.readUTF();
+                r.readUTF();
+             p = r.readDouble();
+             cant = r.readInt();
+            
+            if(cod==codigo){
+                return i;
+            }
+        }
+        
         return null;
     }
         
@@ -244,7 +267,50 @@ public class SuperMercado {
         que haya existencia de cada producto, o
         que el producto escogido exista. (30%)
     */
-    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
+    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]) throws IOException{
+        try{
+            RandomAccessFile factura = new RandomAccessFile(ROOT_FOLDER+"/invoices"+"/factura_" +FACTURA_OFFSET+".sml","rw");
+            String opt = null;
+            Date date = new Date();
+            long d = date.getTime();
+           
+                factura.writeInt(FACTURA_OFFSET);
+                factura.writeLong(d);
+                factura.writeUTF(cliente);
+                factura.writeUTF(tipo.name());
+       
+            while(rProds.getFilePointer()<rProds.length()){
+                rProds.seek(0);
+                rProds.readInt();
+                rProds.readUTF();
+                rProds.readUTF();
+                rProds.readDouble();
+                int exis = rProds.readInt();
+                    if(exis<1){
+                        System.out.println("No hay productos de este item");
+                    }else{
+                        int cod = rProds.readInt();
+                        int cant = 0;
+                        String name = rProds.readUTF();
+                        rProds.readUTF();
+                        double precio = rProds.readDouble();
+                        rProds.readInt();
+                        InvoiceItem item = new InvoiceItem(cod, cant, precio, name);
+                        factura.writeUTF(item.toString());
+                        double st = precio*cant;
+                        double inte = 0;
+                        double disc = st*tipo.discount;
+                        double tot = st + inte - disc;
+                       
+                        factura.writeDouble(st);
+                        factura.writeDouble(tot);
+                    }
+                   
+                return true;    
+            }
+        }catch(FileNotFoundException ex){
+            return false;
+        }
         return false;
     }
     
@@ -256,10 +322,38 @@ public class SuperMercado {
         Retorna true si existe la factura o false
         si no. (20%)
     */
-    public boolean printInvoice(int codf){
+   public boolean printInvoice(int codf)throws IOException{
+        RandomAccessFile n = new RandomAccessFile(ROOT_FOLDER+"/invoice/factura_PrintInvoice.sml","rw");
+        FileWriter fc = new FileWriter("factura.txt");      
+        if(fc instanceof  FileWriter){
+            long fecha = 0;
+        Date f = new Date(fecha);
+            fc.write("LISTADO DE FACTURA CODIGO DE CLIENTE");
+            fc.write("\r\n----------------------------------\r\n");
+            n.seek(0);
+            while(n.getFilePointer() < n.length()){
+                int codfactura = n.readInt();
+                fecha = n.readLong();
+                String cliente = n.readUTF();
+                String forma = n.readUTF();
+                int items = n.readInt();
+                int codpro = n.readInt();
+                int cantPro = n.readInt();
+                double precio = n.readDouble();
+                double st = n.readDouble();
+                double inte = n.readDouble();
+                double desc = n.readDouble();
+               
+                if(codfactura == codf){
+                    fc.write(codfactura+"-"+ f+"-"+cliente+"-"+forma+"-"+items+"-"+codpro+"-"
+                            + cantPro+"-"+precio+"-"+st+"-"+inte+"-"+desc );
+                    return true;
+                }
+            }
+        }
+       
         return false;
     }
-    
     /*
     4- Imprime cuantas facturas se han creado y
     el monto total generado en subtotal,
@@ -275,8 +369,26 @@ public class SuperMercado {
     generado. El formato es:
         CODIGO - CLIENTE - TOTAL LPS. - FECHA (15%)
     */
-    public void printInvoices(){
+    public void printInvoices() throws IOException{
+        RandomAccessFile f = new RandomAccessFile(ROOT_FOLDER+"/invoices/factura_"+FACTURA_OFFSET +".sml",
+                "rw");
+        long fecha = 0;
+        Date fe = new Date(fecha);
         
+        f.seek(0);
+        while(f.getFilePointer()<f.length()){
+            
+            int cod = f.readInt();
+            fecha = f.readLong();
+            String cliente = f.readUTF();
+            f.readUTF();
+            f.skipBytes(20);
+            double total = f.readDouble();
+            f.skipBytes(16);
+            
+            System.out.println("CODIGO: "+cod+"-"+"CLIENTE: "+cliente+"-"+"TOTAL LPS.: "+total+"-"+"FECHA: "+fe);
+            
+        }
     }
     
     /*
