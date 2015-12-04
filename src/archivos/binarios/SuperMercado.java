@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Calendar;
+import java.util.Scanner;
 
 /**
  *
@@ -43,17 +45,18 @@ public class SuperMercado {
         double inte
         double desc
     */
-    private RandomAccessFile rProds, rCods,rFac;
+    private RandomAccessFile rProds, rCods;
     public static final String ROOT_FOLDER = "market";
     public static final int PRODUCTO_OFFSET = 0;
     public static final int FACTURA_OFFSET = 4;
+    
+    Scanner scan = new Scanner(System.in);
     
     public SuperMercado(){
         try{
             new File(ROOT_FOLDER+"/invoices").mkdirs();
             rProds = new RandomAccessFile(ROOT_FOLDER+"/productos.sml","rw");
             rCods = new RandomAccessFile(ROOT_FOLDER+"/codigos.sml","rw");
-            rFac = new RandomAccessFile(ROOT_FOLDER+"/invoices/codigos.sml","rw");
             initCodigos();
         }
         catch(IOException e){
@@ -239,14 +242,38 @@ public class SuperMercado {
     }
         
     /*
-    2- Crea una nueva factua con la informacion que se
+    2- Crea una nueva factura con la informacion que se
     recibe.
     NOTA: Cuando se use esta funcion deben validar
         que haya existencia de cada producto, o
         que el producto escogido exista. (30%)
     */
-    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
-        return false;
+    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]) throws IOException{
+        int codFactura = getCodigo(FACTURA_OFFSET);
+        RandomAccessFile rFac = new RandomAccessFile(ROOT_FOLDER+"/invoices/factura_"+codFactura+".sml","rw");
+        for(InvoiceItem item : items){
+            if(getProduct(item.codigo) == null && getProduct(item.codigo).cantidad < 1)
+                return false;
+        }
+        Calendar today = Calendar.getInstance();
+        double subtotal = 0;
+        rFac.seek(rFac.length());
+        rFac.writeInt(codFactura);
+        rFac.writeLong(today.getTimeInMillis());
+        rFac.writeUTF(cliente);
+        rFac.writeUTF(tipo.name());
+        rFac.writeInt(items.length);
+        for(InvoiceItem item : items){
+            rFac.writeInt(item.codigo);
+            rFac.writeInt(item.cantidad);
+            rFac.writeDouble(item.precio);
+            addItemToProduct(item.codigo,0-item.cantidad);
+            subtotal += (item.precio * item.cantidad);
+        }
+        rFac.writeDouble(subtotal);
+        rFac.writeDouble(subtotal*.15);
+        rFac.writeDouble(subtotal*tipo.discount);
+        return true;
     }
     
     /*
@@ -257,39 +284,7 @@ public class SuperMercado {
         Retorna true si existe la factura o false
         si no. (20%)
     */
-    public boolean printInvoice(int codf) throws IOException{
-        FileWriter fw = new FileWriter(ROOT_FOLDER+"factura_codigo_cliente.txt");
-        rFac.seek(0);
-        while(rFac.getFilePointer()<rFac.length()){
-          int codFac = rFac.readInt();
-          if(codf==codFac){
-              fw.write(codFac+"\r\n");
-              long fecha = rFac.readLong();
-              fw.write((int) fecha+"\r\n");
-              String cliente = rFac.readUTF();
-              fw.write(cliente+"\r\n");
-              String fpago = rFac.readUTF();
-              fw.write(fpago+"\r\n");
-              int items = rFac.readInt();
-              fw.write(codf+"\r\n");
-              for(int i=0;i<items;i++){
-                  int item1 = rFac.readInt();
-                  fw.write(item1+"\r\n");
-                  int item2 = rFac.readInt();
-                  fw.write(item2+"\r\n");
-                  double item3 = rFac.readDouble();
-                  fw.write((int) item3+"\r\n");
-              }
-              double st = rFac.readDouble();
-              fw.write((int) st+"\r\n");
-              double inte = rFac.readDouble();
-              fw.write((int) inte+"\r\n");
-              double desc = rFac.readDouble();
-              fw.write((int) desc+"\r\n");
-              return true;
-          }
-            
-        }
+    public boolean printInvoice(int codf){
         return false;
     }
     
