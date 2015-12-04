@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -288,8 +289,26 @@ public class SuperMercado {
         que haya existencia de cada producto, o
         que el producto escogido exista. (30%)
     */
-    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
-        return false;
+    public boolean createInvoice(String cliente, PaymentType tipo, ArrayList<InvoiceItem> items) throws IOException{
+        rFac = new RandomAccessFile(ROOT_FOLDER+"/invoices/factura_cod_de_factura"+getCodigo(FACTURA_OFFSET)+".sml","rw");
+        Calendar today = Calendar.getInstance();
+        double subtotal = 0;
+        rFac.seek(rFac.length());
+        rFac.writeInt(getCodigo(PRODUCTO_OFFSET));
+        rFac.writeLong(today.getTimeInMillis());
+        rFac.writeUTF(cliente);
+        rFac.writeUTF(tipo.name());
+        for(InvoiceItem item : items){
+            rFac.writeInt(item.codigo);
+            rFac.writeInt(item.cantidad);
+            rFac.writeDouble(item.precio);
+            addItemToProduct(item.codigo,0-item.cantidad);
+            subtotal += (item.precio * item.cantidad);
+        }
+        rFac.writeDouble(subtotal);
+        rFac.writeDouble(subtotal*.15);
+        rFac.writeDouble(subtotal*tipo.discount);
+        return true;
     }
     
     /*
