@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Date;
 
 /**
  *
@@ -313,13 +314,28 @@ public class SuperMercado {
     */
     public void printInvoices() throws IOException{
         File f = new File(ROOT_FOLDER+"/invoices/factura_cod.sml","rw");
+        Date fec;
         if(f.exists()){
             RandomAccessFile rFac = new RandomAccessFile(f.getPath(),"rw");
 
             rFac.seek(0);
             while(rFac.getFilePointer()<rFac.length()){
                 int codFac = rFac.readInt();
-                
+                long fecha = rFac.readLong();
+                fec = new Date(fecha);
+                String cliente = rFac.readUTF();
+                rFac.readUTF();
+                int items = rFac.readInt();
+                for(int i=0;i<items;i++){
+                    rFac.readInt();
+                    rFac.readInt();
+                    rFac.readLong();
+                }
+                double st = rFac.readDouble();
+                double inte = rFac.readDouble();
+                double desc = rFac.readDouble();
+                double total = st+inte-desc;
+                System.out.println(codFac+cliente+total+fec);
             }
         }
     }
