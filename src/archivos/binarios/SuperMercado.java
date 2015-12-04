@@ -250,7 +250,7 @@ public class SuperMercado {
 
             if(codi==cod){
                 if(exist>=cant){
-                    return new InvoiceItem(codi,exist,precio,title);
+                    return new InvoiceItem(codi,cant,precio,title);
                 }
             }       
         }
