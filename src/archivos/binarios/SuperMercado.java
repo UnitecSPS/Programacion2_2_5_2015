@@ -250,7 +250,7 @@ public class SuperMercado {
     */
     public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]) throws IOException{
         int codFactura = getCodigo(FACTURA_OFFSET);
-        RandomAccessFile rFac = new RandomAccessFile(ROOT_FOLDER+"/invoices/factura_cod"+codFactura+".sml","rw");
+        RandomAccessFile rFac = new RandomAccessFile(ROOT_FOLDER+"/invoices/factura_"+codFactura+".sml","rw");
         for(InvoiceItem item : items){
             if(getProduct(item.codigo) == null && getProduct(item.codigo).cantidad < 1)
                 return false;
@@ -262,6 +262,7 @@ public class SuperMercado {
         rFac.writeLong(today.getTimeInMillis());
         rFac.writeUTF(cliente);
         rFac.writeUTF(tipo.name());
+        rFac.writeInt(items.length);
         for(InvoiceItem item : items){
             rFac.writeInt(item.codigo);
             rFac.writeInt(item.cantidad);
