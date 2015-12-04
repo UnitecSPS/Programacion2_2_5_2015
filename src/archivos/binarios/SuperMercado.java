@@ -50,7 +50,7 @@ public class SuperMercado {
     
     public SuperMercado(){
         try{
-            new File(ROOT_FOLDER).mkdir();
+            new File(ROOT_FOLDER+"/invoices").mkdirs();
             rProds = new RandomAccessFile(ROOT_FOLDER+"/productos.sml","rw");
             rCods = new RandomAccessFile(ROOT_FOLDER+"/codigos.sml","rw");
             initCodigos();
