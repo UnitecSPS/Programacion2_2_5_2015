@@ -1,0 +1,1 @@
+1/r/nFri Dec 04 09:19:45 CST 2015/r/nCliente: Luis/r/nForma de Pago: CONTADO/r/nTotal Items: 1Cod. Prod: 1Cant. Prod: 1Precio Prod: 2.0Subtotal: 2.0/r/nIntereses: 0.3/r/nDescuento: 0.04/r/n

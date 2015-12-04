@@ -7,6 +7,7 @@ package archivos.binarios;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ import javax.swing.JPanel;
  */
 public class Menu extends javax.swing.JFrame {
     static SuperMercado market = new SuperMercado();
+    static Scanner lea = new Scanner(System.in);
     /**
      * Creates new form Menu
      */
@@ -48,6 +50,10 @@ public class Menu extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -92,6 +98,11 @@ public class Menu extends javax.swing.JFrame {
         jMenu2.setText("Facturas");
 
         jMenuItem3.setText("Generar Venta");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem3);
 
         jMenuBar1.add(jMenu2);
@@ -113,6 +124,38 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jMenu3.add(jMenuItem5);
+
+        jMenuItem7.setText("Print Invoice");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem7);
+
+        jMenuItem8.setText("Stadistics");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem8);
+
+        jMenuItem9.setText("PrintInvoices");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem9);
+
+        jMenuItem10.setText("Product Performance");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem10);
 
         jMenuBar1.add(jMenu3);
 
@@ -195,6 +238,60 @@ public class Menu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error en Archivo Insuficiente.");
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        Scanner rd = new Scanner(System.in);
+        System.out.println("Nombre del Cliente");
+        String cli = rd.next();
+        System.out.println("Forma de pago");
+        PaymentType p=null,e = null;
+        switch(rd.next().toUpperCase()){
+            case "CONTADO":
+                p=e.CONTADO;
+                break;
+            case "TARJETA":
+                p=e.TARJETA;
+                break;
+            case "TARJETA_LOURDES":
+                p=e.TARJETA_LOURDES;
+                break;
+        }
+        try{
+        if(market.createInvoice(cli, p, market.invoice()));
+            System.out.println("OK");
+        }catch(Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        System.out.println("Ingrese un codigo: ");
+        int codf = lea.nextInt();
+        try {
+            System.out.println(market.printInvoice(codf));
+        } catch (IOException ex) {}
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        System.out.println("Estadisticas");
+        market.statistic();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        System.out.println("Historia de Invoices");
+        try {
+            market.printInvoices();
+        } catch (IOException ex) {}
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        System.out.println("Product Performance");
+        System.out.println("Ingrese un codigo: ");
+        int codf = lea.nextInt();
+        try {
+            market.productPerfomance(codf);
+        } catch (IOException ex) {}
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
     public static void exceptionOptionPane(Exception e){
         JOptionPane.showMessageDialog(null,e.toString(), 
                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -241,11 +338,15 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables

@@ -1,0 +1,1 @@
+2/n/rFri Dec 04 09:30:50 CST 2015/n/rCliente: Roberto/n/rForma de Pago: CONTADO/n/rTotal Items: 1Cod. Prod: 2Cant. Prod: 10Precio Prod: 5.0Subtotal: 5.0/n/rIntereses: 0.75/n/rDescuento: 0.1/n/r

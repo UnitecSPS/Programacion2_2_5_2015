@@ -253,8 +253,9 @@ public class SuperMercado {
     
     public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]) throws IOException{
         rCods.seek(FACTURA_OFFSET);
-        int codFact=rCods.readInt();
-        RandomAccessFile factur = new RandomAccessFile(ROOT_FOLDER+"/FACTURA_"+codFact+".sml","rw");
+        int codFact=getCodigo(FACTURA_OFFSET);
+        System.out.println("Ingrese el codigo"+codFact);
+        RandomAccessFile factur = new RandomAccessFile(ROOT_FOLDER+"/invoices/FACTURA_"+codFact+".sml","rw");
         Date d = new Date();
         String fecha = d.toString();
         String formapago=tipo.name();
@@ -263,6 +264,13 @@ public class SuperMercado {
         factur.writeUTF(cliente);
         factur.writeUTF(formapago);
         double st=0,imp,des;
+        int con=0;
+        for(InvoiceItem item: items){
+            if(item!=null){
+                con++;
+            }
+        }
+        factur.writeInt(con);
         for(InvoiceItem item: items){
             if(item!=null){
                 factur.writeInt(item.codigo);
@@ -302,16 +310,48 @@ public class SuperMercado {
                     if(coda==cod){
                         if(lleva<=cant){
                             productos[pos+1] = new InvoiceItem(cod,lleva,pre,nom);
+                            addItemToProduct(cod,-1*lleva);
                             System.out.println("Listo");
                         }
                     }
                 }
             }
-            System.out.println("¿Quiere otro pariente?");
+            System.out.println("¿Quiere otro?");
             otro=rd.next();
-        }while(otro.equalsIgnoreCase("no"));
+        }while(otro.equalsIgnoreCase("SI"));
         return productos;
     }
+    
+    
+    public InvoiceItem getItem(int codigo,int lleva) throws IOException{
+        rCods.seek(0);
+        int codispo=rCods.readInt()-1;
+        InvoiceItem produc=null;
+        if(codigo<=codispo){
+            rProds.seek(0);
+            while(rProds.getFilePointer()<rProds.length()){
+                int coda=rProds.readInt();
+                String nom = rProds.readUTF();
+                rProds.readUTF();
+                double pre = rProds.readDouble();
+                int cant=rProds.readInt();
+                if(coda==codigo){
+                    if(lleva<=cant){
+                        produc = new InvoiceItem(codigo,lleva,pre,nom);
+                        addItemToProduct(codigo,-1*lleva);
+                        System.out.println("Listo");
+                    }else{
+                        System.out.println("No hay existencias");
+                        return null;
+                    }
+                }
+            }
+        }else{
+            return null;
+        }
+    return null;
+    }
+
     
     /*
         3- Genera en un archivo de texto llamado:
@@ -321,8 +361,32 @@ public class SuperMercado {
         Retorna true si existe la factura o false
         si no. (20%)
     */
-    public boolean printInvoice(int codf){
-        return false;
+    public boolean printInvoice(int codf)throws IOException{
+        File buscar = new File(ROOT_FOLDER + "/invoices/FACTURA_" + codf + ".sml");
+        if(buscar.exists()){
+            File factura = new File(ROOT_FOLDER + "factura_codigo_" + codf + "_cliente.txt");
+            FileWriter factura_print = new FileWriter(factura);
+            RandomAccessFile factu = new RandomAccessFile(ROOT_FOLDER+"/invoices/FACTURA_"+codf+".sml","r");
+            factu.seek(0);
+            factura_print.write("" + factu.readInt() + "\n\r");//Codigo
+            factura_print.write(factu.readUTF() + "\n\r");//Fecha
+            factura_print.write("Cliente: " + factu.readUTF() + "\n\r");//Cliente
+            factura_print.write("Forma de Pago: " + factu.readUTF() + "\n\r");//Forma de Pago
+            int cant_items = factu.readInt();
+            factura_print.write("Total Items: " + cant_items);//Cant Items.
+            for(int cont = 0; cont < cant_items; cont++){//Items y Epecs.
+                factura_print.write("Cod. Prod: " + factu.readInt());
+                factura_print.write("Cant. Prod: " + factu.readInt());
+                factura_print.write("Precio Prod: " + factu.readDouble());
+            }
+            factura_print.write("Subtotal: " + factu.readDouble() + "\n\r");//Subtotal
+            factura_print.write("Intereses: " + factu.readDouble() + "\n\r");//Intereses
+            factura_print.write("Descuento: " + factu.readDouble() + "\n\r");//Descuento
+            factura_print.flush();
+            return true;
+        }else{
+            return false;
+        }
     }
     
     /*
@@ -332,6 +396,37 @@ public class SuperMercado {
     monto total generado en descuentos. (15%)
     */
     public void statistic(){
+        try {
+            File fact = new File(ROOT_FOLDER + "/invoices");
+            int facts_generadas =0;
+            double todos_st =0, todos_imp=0, todos_desc=0;
+            
+            for (File facts : fact.listFiles()) {
+                RandomAccessFile est = new RandomAccessFile(facts, "rw");
+                est.readInt();
+                est.readUTF();
+                est.readUTF();
+                est.readUTF();
+                
+                int cont_facts = est.readInt();
+                for (int i = 0; i <= cont_facts; i++) {
+                    est.readInt();
+                    est.readInt();
+                    est.readDouble();
+                }
+                double st =est.readDouble();
+                double imp = est.readDouble();
+                double desc = est.readDouble();
+                
+                facts_generadas++;
+                
+                todos_st += st;
+                todos_imp += imp;
+                todos_desc += desc;
+            }
+            System.out.println("Total de Facturas Generadas: "+facts_generadas+"\nTotal generado en Subtotales: "+todos_st+
+                    "\nTotal generado en Impuestos: "+todos_imp+"\nTotal generado en Descuentos: "+todos_desc);
+        } catch (Exception e) {}
         
     }
     
@@ -340,8 +435,30 @@ public class SuperMercado {
     generado. El formato es:
         CODIGO - CLIENTE - TOTAL LPS. - FECHA (15%)
     */
-    public void printInvoices(){
-        
+    public void printInvoices()throws IOException{
+        File folder_facturas = new File(ROOT_FOLDER + "/invoices");
+        for(File f: folder_facturas.listFiles()){
+            RandomAccessFile F_A = new RandomAccessFile(f, "r");
+            System.out.print("Cod: " + F_A.readInt());
+            F_A.readUTF();
+            System.out.print("- Cliente: " + F_A.readUTF());
+            F_A.readUTF();
+            int cant_items = F_A.readInt();
+            double total = 0;
+            for(int cont = 0; cont < cant_items; cont++){//Items y Epecs.
+                F_A.readInt();
+                int cant_prod = F_A.readInt();
+                double prec_prod = F_A.readDouble();
+                total = total + (cant_prod *prec_prod);
+            }
+            total = total + F_A.readDouble();
+            total = total - F_A.readDouble(); 
+            System.out.print("- Total: " + total);
+            F_A.seek(0);
+            F_A.readInt();
+            System.out.print("- Fecha: " + F_A.readUTF());
+            System.out.println("");
+        }
     }
     
     /*
@@ -351,10 +468,47 @@ public class SuperMercado {
     se ha vendido historicamente y el monto total
     generado.
     */
-    public void productPerfomance(int codp){
+    public void productPerfomance(int codp)throws IOException{
+        int cont_items = 0; double monto_g = 0, subt_prod = 0;
+        boolean buscar = search(codp);
         
+        if (buscar) {
+            rProds.seek(rProds.getFilePointer()-4);
+            int code = rProds.readInt();
+            String name = rProds.readUTF();
+            String tipo = rProds.readUTF();
+            double prec = rProds.readDouble();
+            int exist = rProds.readInt();
+            System.out.print("Codigo del Producto: "+code+"\nNombre: "+name+"\nTipo: "+tipo+"\nPrecio: "+prec+"\nExistencias: "+exist);
+        }
+        
+        File facts = new File(ROOT_FOLDER+"/invoices");
+        
+        for (File fact : facts.listFiles()) {
+            RandomAccessFile raf = new RandomAccessFile(fact, "rw");
+            raf.readInt();
+            raf.readUTF();
+            raf.readUTF();
+            raf.readUTF();
+
+            int cont_facts = raf.readInt();
+            for (int i = 0; i <= cont_facts; i++) {
+                int cod =raf.readInt();
+                int cant = raf.readInt();
+                double precio = raf.readDouble();
+                
+                if (cod == codp) {
+                    cont_items++;
+                    subt_prod = cant*precio;
+                }
+                
+                monto_g += subt_prod;
+            }
+        }
+        System.out.println("Items Vendidos: "+cont_items+"\nMonto Generado: "+monto_g);
     }
     
     //7- AGREGAR CADA OPCION EN LA FORMA Menu
+    //LISTO!
     //Aunque se haga en consola el proceso. (10%)
 }
