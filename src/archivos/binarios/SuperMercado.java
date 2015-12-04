@@ -6,10 +6,13 @@
 package archivos.binarios;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  *
@@ -234,8 +237,48 @@ public class SuperMercado {
         producto que existe. Si no existe, regresa
         null (10%)
     */
-    public InvoiceItem getProduct(int cod){
+    public InvoiceItem getProduct(int cod,int cant) throws IOException{
+       rProds.seek(0);
+        while(rProds.getFilePointer()<rProds.length()){
+
+            int codi=rProds.readInt();
+            String title=rProds.readUTF();
+            String tipo=rProds.readUTF();
+            double precio=rProds.readDouble();
+            int exist=rProds.readInt();
+
+            if(codi==cod){
+                if(exist>=cant){
+                    return new InvoiceItem(codi,exist,precio,title);
+                }
+            }       
+        }
         return null;
+    }
+    
+    public ArrayList<InvoiceItem> productos() throws IOException{
+    
+        Scanner sc=new Scanner(System.in);
+        String resp;
+        ArrayList<InvoiceItem> products=new ArrayList<>();
+        do{
+            System.out.print("Ingrese codigo del producto: ");
+            int cod=sc.nextInt();
+            System.out.print("Ingrese cantidad del producto: ");
+            int cant=sc.nextInt();
+            InvoiceItem item=getProduct(cod,cant);
+            if(item!=null){
+                products.add(item);
+                System.out.println("Producto añadido correctamente");
+            }
+            else
+                System.out.println("Producto solicitado es insuficiente");
+            
+            System.out.println("Desea Ingresar mas productos");
+            resp=sc.next();
+        }while(resp.equalsIgnoreCase("si"));
+        
+        return products;
     }
         
     /*
@@ -303,8 +346,33 @@ public class SuperMercado {
     monto total generado en intereses
     monto total generado en descuentos. (15%)
     */
-    public void statistic(){
+    public void statistic() throws FileNotFoundException, IOException{
+    
+        File invoices = new File("invoices");
+        if(invoices.exists()){
+        int cant=invoices.listFiles().length;
+        int subtotal=0,inte=0,desc=0;
+        for(File f:invoices.listFiles()){
+            RandomAccessFile file= new RandomAccessFile(f,"rw");
+            int cod=file.readInt();
+            long fecha=file.readLong();
+            file.readUTF();
+            file.readUTF();
+            int items=file.readInt();
+            for(int i=1;i<=items;i++){
+                file.readInt();
+                file.readInt();
+                file.readDouble();
+            }
+            subtotal+=file.readDouble();
+            inte+=file.readDouble();
+            desc+=file.readDouble();
+        }
         
+        System.out.println("Total de Facturas creadas: "+cant+" Sutotal: "+subtotal+" Intereses: "+inte+" Descuento: "+desc);
+        }
+        else
+            System.out.println("No hay ninguna factura registrada");
     }
     
     /*
