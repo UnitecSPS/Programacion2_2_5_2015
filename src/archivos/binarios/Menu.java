@@ -7,6 +7,8 @@ package archivos.binarios;
 
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -43,6 +45,7 @@ public class Menu extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
@@ -86,6 +89,14 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem6);
+
+        jMenuItem7.setText("Probar");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem7);
 
         jMenuBar1.add(jMenu1);
 
@@ -195,6 +206,47 @@ public class Menu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error en Archivo Insuficiente.");
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+
+        Scanner scan = new Scanner(System.in);
+        SuperMercado superM = new SuperMercado();
+        int choice;
+        int codePrompt;
+        do{
+            try {
+                System.out.println("\t\tMenu Consola\n\n\t1 - Crear Factura\n\t3 - Estadisticas\n\t4 - Imprimir Facturas");
+                System.out.print("\nEscoja una opcion: ");
+                choice = scan.nextInt();
+                switch(choice){
+                    case 1:
+                        String cliente;
+                        PaymentType type = null;
+                        ArrayList<InvoiceItem> prods;
+                        System.out.print("Nombre de cliente: ");
+                        cliente = scan.next();
+                        System.out.print("Forma de pago: \n1 - Al contado\n2 - Tarjeta de credito\n3 - Tarjeta LOURDES");
+                        switch(scan.nextInt()){
+                            case 1: type = PaymentType.CONTADO;
+                                break;
+                            case 2: type = PaymentType.TARJETA;
+                                break;
+                            case 3: type = PaymentType.TARJETA_LOURDES;
+                                break;
+                        }
+                        prods = superM.productos();
+                        superM.createInvoice(cliente, type, prods);
+                        break;
+                    case 3:
+                        break;
+                    case 4: superM.printInvoices();
+                    break;
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }while(true);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
     public static void exceptionOptionPane(Exception e){
         JOptionPane.showMessageDialog(null,e.toString(), 
                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -246,6 +298,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
