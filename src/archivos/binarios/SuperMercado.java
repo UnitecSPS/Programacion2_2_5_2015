@@ -43,7 +43,7 @@ public class SuperMercado {
         double inte
         double desc
     */
-    private RandomAccessFile rProds, rCods;
+    private RandomAccessFile rProds, rCods,rFac;
     public static final String ROOT_FOLDER = "market";
     public static final int PRODUCTO_OFFSET = 0;
     public static final int FACTURA_OFFSET = 4;
@@ -53,6 +53,7 @@ public class SuperMercado {
             new File(ROOT_FOLDER+"/invoices").mkdirs();
             rProds = new RandomAccessFile(ROOT_FOLDER+"/productos.sml","rw");
             rCods = new RandomAccessFile(ROOT_FOLDER+"/codigos.sml","rw");
+            rFac = new RandomAccessFile(ROOT_FOLDER+"/invoices/codigos.sml","rw");
             initCodigos();
         }
         catch(IOException e){
@@ -256,7 +257,38 @@ public class SuperMercado {
         Retorna true si existe la factura o false
         si no. (20%)
     */
-    public boolean printInvoice(int codf){
+    public boolean printInvoice(int codf) throws IOException{
+        rFac.seek(0);
+        while(rFac.getFilePointer()<rFac.length()){
+//        int codfactura
+//        long fecha
+//        String cliente
+//        String forma de pago
+//        int items
+//            int cod producto
+//            int cantidad del producto
+//            double precio unitario del prod en ese momento
+//        double st
+//        double inte
+//        double desc
+          
+          int codFac = rFac.readInt();
+          if(codf==codFac){
+              long fecha = rFac.readLong();
+              String cliente = rFac.readUTF();
+              String fpago = rFac.readUTF();
+              int items = rFac.readInt();
+              for(int i=0;i<items;i++){
+                  int item1 = rFac.readInt();
+                  int item2 = rFac.readInt();
+                  double item3 = rFac.readDouble();
+              }
+              double st = rFac.readDouble();
+              double inte = rFac.readDouble();
+              double desc = rFac.readDouble();
+          }
+            
+        }
         return false;
     }
     
