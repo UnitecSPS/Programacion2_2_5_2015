@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  *
@@ -244,8 +246,71 @@ public class SuperMercado {
         que haya existencia de cada producto, o
         que el producto escogido exista. (30%)
     */
-    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
+    /*public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
         return false;
+    }
+    */
+    
+    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]) throws IOException{
+        rCods.seek(FACTURA_OFFSET);
+        int codFact=rCods.readInt();
+        RandomAccessFile factur = new RandomAccessFile(ROOT_FOLDER+"/FACTURA_"+codFact+".sml","rw");
+        Date d = new Date();
+        String fecha = d.toString();
+        String formapago=tipo.name();
+        factur.writeInt(codFact);
+        factur.writeUTF(fecha);
+        factur.writeUTF(cliente);
+        factur.writeUTF(formapago);
+        double st=0,imp,des;
+        for(InvoiceItem item: items){
+            if(item!=null){
+                factur.writeInt(item.codigo);
+                factur.writeInt(item.cantidad);
+                factur.writeDouble(item.precio);
+                st=+item.precio;
+            }
+        }
+        imp=st*0.15;
+        des=st*tipo.discount;
+        factur.writeDouble(st);
+        factur.writeDouble(imp);
+        factur.writeDouble(des);
+        factur.writeDouble((st+imp)-des);
+        return true;
+    }
+    
+    public InvoiceItem[] invoice() throws IOException{
+        Scanner rd = new Scanner(System.in);
+        rCods.seek(0);
+        int codispo=rCods.readInt()-1,cod,lleva,pos=-1;
+        String otro="";
+        InvoiceItem productos[] = new InvoiceItem[50];
+        do{
+            rProds.seek(0);
+            System.out.println("Ingrese el codigo");
+            cod=rd.nextInt();
+            System.out.println("Ingrese la cantidad");
+            lleva=rd.nextInt();
+            if(cod<=codispo){
+                while(rProds.getFilePointer()<rProds.length()){
+                    int coda=rProds.readInt();
+                    String nom = rProds.readUTF();
+                    rProds.readUTF();
+                    double pre = rProds.readDouble();
+                    int cant=rProds.readInt();
+                    if(coda==cod){
+                        if(lleva<=cant){
+                            productos[pos+1] = new InvoiceItem(cod,lleva,pre,nom);
+                            System.out.println("Listo");
+                        }
+                    }
+                }
+            }
+            System.out.println("¿Quiere otro pariente?");
+            otro=rd.next();
+        }while(otro.equalsIgnoreCase("no"));
+        return productos;
     }
     
     /*
