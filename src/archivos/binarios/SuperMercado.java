@@ -53,7 +53,6 @@ public class SuperMercado {
             new File(ROOT_FOLDER+"/invoices").mkdirs();
             rProds = new RandomAccessFile(ROOT_FOLDER+"/productos.sml","rw");
             rCods = new RandomAccessFile(ROOT_FOLDER+"/codigos.sml","rw");
-            rFac = new RandomAccessFile(ROOT_FOLDER+"/invoices/codigos.sml","rw");
             initCodigos();
         }
         catch(IOException e){
@@ -258,37 +257,41 @@ public class SuperMercado {
         si no. (20%)
     */
     public boolean printInvoice(int codf) throws IOException{
-        FileWriter fw = new FileWriter(ROOT_FOLDER+"factura_codigo_cliente.txt");
-        rFac.seek(0);
-        while(rFac.getFilePointer()<rFac.length()){
-          int codFac = rFac.readInt();
-          if(codf==codFac){
-              fw.write(codFac+"\r\n");
-              long fecha = rFac.readLong();
-              fw.write((int) fecha+"\r\n");
-              String cliente = rFac.readUTF();
-              fw.write(cliente+"\r\n");
-              String fpago = rFac.readUTF();
-              fw.write(fpago+"\r\n");
-              int items = rFac.readInt();
-              fw.write(codf+"\r\n");
-              for(int i=0;i<items;i++){
-                  int item1 = rFac.readInt();
-                  fw.write(item1+"\r\n");
-                  int item2 = rFac.readInt();
-                  fw.write(item2+"\r\n");
-                  double item3 = rFac.readDouble();
-                  fw.write((int) item3+"\r\n");
-              }
-              double st = rFac.readDouble();
-              fw.write((int) st+"\r\n");
-              double inte = rFac.readDouble();
-              fw.write((int) inte+"\r\n");
-              double desc = rFac.readDouble();
-              fw.write((int) desc+"\r\n");
-              return true;
-          }
-            
+        File f = new File(ROOT_FOLDER+"/invoices/factura_cod.sml","rw");
+        if(f.exists()){
+            RandomAccessFile rFac = new RandomAccessFile(f.getPath(),"rw");
+
+            FileWriter fw = new FileWriter(ROOT_FOLDER+"factura_codigo_cliente.txt");
+            rFac.seek(0);
+            while(rFac.getFilePointer()<rFac.length()){
+                int codFac = rFac.readInt();
+                if(codf==codFac){
+                    fw.write(codFac+"\r\n");
+                    long fecha = rFac.readLong();
+                    fw.write((int) fecha+"\r\n");
+                    String cliente = rFac.readUTF();
+                    fw.write(cliente+"\r\n");
+                    String fpago = rFac.readUTF();
+                    fw.write(fpago+"\r\n");
+                    int items = rFac.readInt();
+                    fw.write(codf+"\r\n");
+                    for(int i=0;i<items;i++){
+                        int item1 = rFac.readInt();
+                        fw.write(item1+"\r\n");
+                        int item2 = rFac.readInt();
+                        fw.write(item2+"\r\n");
+                        double item3 = rFac.readDouble();
+                        fw.write((int) item3+"\r\n");
+                    }
+                    double st = rFac.readDouble();
+                    fw.write((int) st+"\r\n");
+                    double inte = rFac.readDouble();
+                    fw.write((int) inte+"\r\n");
+                    double desc = rFac.readDouble();
+                    fw.write((int) desc+"\r\n");
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -308,8 +311,17 @@ public class SuperMercado {
     generado. El formato es:
         CODIGO - CLIENTE - TOTAL LPS. - FECHA (15%)
     */
-    public void printInvoices(){
-        
+    public void printInvoices() throws IOException{
+        File f = new File(ROOT_FOLDER+"/invoices/factura_cod.sml","rw");
+        if(f.exists()){
+            RandomAccessFile rFac = new RandomAccessFile(f.getPath(),"rw");
+
+            rFac.seek(0);
+            while(rFac.getFilePointer()<rFac.length()){
+                int codFac = rFac.readInt();
+                
+            }
+        }
     }
     
     /*
