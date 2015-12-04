@@ -228,7 +228,68 @@ public class SuperMercado {
         }
     }
     
+    /*
+    1- Devuelve un InvoiceItem con la info de un 
+        producto que existe. Si no existe, regresa
+        null (10%)
+    */
+    public InvoiceItem getProduct(int cod){
+        return null;
+    }
+        
+    /*
+    2- Crea una nueva factua con la informacion que se
+    recibe.
+    NOTA: Cuando se use esta funcion deben validar
+        que haya existencia de cada producto, o
+        que el producto escogido exista. (30%)
+    */
     public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
         return false;
     }
+    
+    /*
+        3- Genera en un archivo de texto llamado:
+            factura_codigo_cliente.txt
+        Con toda la informacion de la factura. Se
+        mira como factura.
+        Retorna true si existe la factura o false
+        si no. (20%)
+    */
+    public boolean printInvoice(int codf){
+        return false;
+    }
+    
+    /*
+    4- Imprime cuantas facturas se han creado y
+    el monto total generado en subtotal,
+    monto total generado en intereses
+    monto total generado en descuentos. (15%)
+    */
+    public void statistic(){
+        
+    }
+    
+    /*
+    5- Imprime en un listado las facturas que se han
+    generado. El formato es:
+        CODIGO - CLIENTE - TOTAL LPS. - FECHA (15%)
+    */
+    public void printInvoices(){
+        
+    }
+    
+    /*
+    BONO: 10%
+    6- Imprime la info total de un producto
+    y luego imprime cuantos items de dicho producto
+    se ha vendido historicamente y el monto total
+    generado.
+    */
+    public void productPerfomance(int codp){
+        
+    }
+    
+    //7- AGREGAR CADA OPCION EN LA FORMA Menu
+    //Aunque se haga en consola el proceso. (10%)
 }
