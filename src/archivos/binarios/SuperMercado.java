@@ -6,6 +6,7 @@
 package archivos.binarios;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -34,13 +35,13 @@ public class SuperMercado {
         long fecha
         String cliente
         String forma de pago
-        double st
-        double inte
-        double desc
         int items
             int cod producto
             int cantidad del producto
             double precio unitario del prod en ese momento
+        double st
+        double inte
+        double desc
     */
     private RandomAccessFile rProds, rCods;
     public static final String ROOT_FOLDER = "market";
@@ -90,15 +91,144 @@ public class SuperMercado {
         //precio
         rProds.writeDouble(price);
         //existencia
-        rProds.writeInt(10);
+        rProds.writeInt(1);
         return true;
+    }
+    
+    public String[] encabezados(){
+        String head[] = {"Codigo","Titulo","Tipo",
+            "Precio", "Existencia"};
+        return head;
+    }
+    
+    /*
+    retornar CUANTOS productos tiene el archivo
+    */
+    public int productCount()throws IOException{
+      rCods.seek(PRODUCTO_OFFSET);
+      int cod = rCods.readInt();
+      return cod-1;
+    }
+    
+    public Object[][] toTable()throws IOException{
+        int filas = productCount();
+        Object table[][] = new Object[filas][5];
+        
+        rProds.seek(0);
+        for(int f=0; f < filas; f++){
+            table[f][0] = rProds.readInt();
+            table[f][1] = rProds.readUTF();
+            table[f][2] = rProds.readUTF();
+            table[f][3] = rProds.readDouble();
+            table[f][4] = rProds.readInt();
+        }
+        
+        return table;
     }
     
     /*
     Imprima todos los datos de todos los productos
     agregados
     */
-    public void list(){
+    public void list() throws IOException{
+        rProds.seek(0);
+        while(rProds.getFilePointer() < rProds.length()){
+            int c = rProds.readInt();
+            String title = rProds.readUTF();
+            String tipo = rProds.readUTF();
+            double p = rProds.readDouble();
+            int cant = rProds.readInt();
+            System.out.println(c+"-"+title+"-"+tipo+
+                    " Lps."+p+" - "+cant+" items.");
+        }
+    }
+    
+    /*
+    Busca un producto con codigo "codp" dentro
+    del archivo, si lo encuentra retorna true
+    pero deja el apuntador justo antes del nombre
+    de dicho producto. Retorna false si no esta
+    */
+    public boolean search(int codp)throws IOException{
+        rProds.seek(0);
+        while(rProds.getFilePointer() < rProds.length()){
+            if(codp == rProds.readInt())
+                return true;
+            rProds.readUTF();
+            rProds.readUTF();
+            rProds.skipBytes(12);
+        }
+        return false;
+    }
+    
+    /*
+    Busca un producto con ese codigo, si lo encuentra
+    le suma cant al monto que existencia que tenga
+    Retorna true si se pudo agregar o no
+    */
+    public boolean addItemToProduct(int codp, int cant) throws IOException{
+        boolean result = search(codp);
         
+        if(result){
+            rProds.readUTF();
+            rProds.readUTF();
+            rProds.readDouble();
+            int ex = rProds.readInt();
+            
+            rProds.seek(rProds.getFilePointer()-4);
+            rProds.writeInt(ex+cant);
+        }
+        
+        return result;
+    }
+    
+    /*
+    Busca un producto con ese codigo y actualiza
+    su precio si existe.
+    Retorna true si pudo hacer o no
+    */
+    public boolean setOfferToProduct(int codp, double newPrice) throws IOException{
+        boolean result = search(codp);
+        if(result){
+            rProds.readUTF();
+            rProds.readUTF();
+            rProds.writeDouble(newPrice);
+        }
+        return result;
+    }
+
+    /*
+    Pauta Prueba 5, sin usar rProds
+    */
+    public boolean insuficienteReport() {
+        try{
+            RandomAccessFile r = new RandomAccessFile(ROOT_FOLDER+"/productos.sml",
+                "rw");
+            FileWriter fw = new FileWriter("Insuficiente.txt");
+            fw.write("LISTADO DE PRODUCTOS INSUFICIENTES");
+            fw.write("\r\n----------------------------------\r\n");
+            
+            while(r.getFilePointer() < r.length()){
+                int c = r.readInt();
+                String t = r.readUTF();
+                String ti = r.readUTF();
+                r.readDouble();
+                int cant = r.readInt();
+                
+                if(cant < 2)
+                    fw.write(c+"-"+t+"-"+ti+"-"+cant+
+                        " items disponibles\r\n");
+            }
+            
+            fw.close();
+            r.close();
+            return true;
+        }catch(IOException e){
+            return false;
+        }
+    }
+    
+    public boolean createInvoice(String cliente, PaymentType tipo, InvoiceItem items[]){
+        return false;
     }
 }
